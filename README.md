@@ -6,10 +6,24 @@
     <title>Chơi Game H5</title>
     
     <script>
-        // Hàm kiểm tra xem thiết bị có phải là di động không (được giữ lại)
+        // Hàm kiểm tra xem thiết bị có phải là di động không
         function isMobileDevice() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            
+            // Kiểm tra các chuỗi phổ biến cho điện thoại và máy tính bảng
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+        }
+
+        // Hàm đặt nguồn game
+        function setGameSource() {
+            const gameIframe = document.getElementById('game-iframe');
+            if (!gameIframe) return;
+
+            if (isMobileDevice()) {
+                // Nếu là thiết bị di động (bao gồm máy tính bảng), đặt link ngắn
+                gameIframe.src = "http://103.153.74.65:81";
+            }
+            // Nếu không phải di động, link mặc định trong HTML sẽ được giữ lại
         }
 
         // Logic bảo mật (Giữ nguyên)
@@ -31,11 +45,12 @@
             }
         };
 
+        // Chạy các chức năng khi trang tải xong
         window.onload = function() {
-            // Chạy kiểm tra thiết bị và đặt nguồn game (Giữ lại logic, mặc dù không dùng iframe)
-            // Bạn có thể dùng isMobileDevice() để tùy chỉnh link ở bước tiếp theo nếu cần
-            
-            // Logic chuyển focus về body (Giữ nguyên)
+            // Chạy kiểm tra thiết bị và đặt nguồn game
+            setGameSource(); 
+
+            // Logic chuyển focus về body (Giữ nguyên để hỗ trợ chặn F12)
             document.body.focus();
             document.addEventListener('mousedown', function() {
                 document.body.focus(); 
@@ -52,65 +67,68 @@
             padding: 0;
             width: 100vw;
             height: 100vh;
-            overflow: auto; /* Thay đổi thành auto để cuộn nếu cần */
+            overflow: hidden; 
             background-color: #f0f0f0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Căn giữa nội dung theo chiều dọc */
             font-family: sans-serif;
-            text-align: center;
         }
 
         h1 {
             color: #333;
-            margin: 10px 0 30px; /* Thêm khoảng cách dưới tiêu đề */
+            margin: 10px 0;
             font-size: 1.8em;
+            text-align: center;
         }
         
-        .game-link-container {
-            padding: 30px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        #game-container {
+            width: 100%; 
+            flex-grow: 1; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+            border: 2px solid #333; 
         }
 
-        .game-link-button {
-            display: inline-block;
-            padding: 15px 30px;
-            background-color: #007bff; /* Màu xanh dương nổi bật */
-            color: white;
-            text-decoration: none;
-            font-size: 1.5em;
-            font-weight: bold;
-            border-radius: 8px;
-            transition: background-color 0.3s, transform 0.1s;
+        #game-iframe {
+            width: 100%;
+            height: 100%;
+            border: none; 
         }
 
-        .game-link-button:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.2em;
+                margin: 5px 0;
+            }
+
+            #game-container {
+                border: none;
+                box-shadow: none;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+             h1 {
+                font-size: 1.5em;
+             }
         }
     </style>
 </head>
 <body>
 
-    <h1>🎮 Chơi Game H5 (Không thể nhúng) 🕹️</h1>
+    <h1>🎮 Chơi Game H5 🕹️</h1>
     
-    <div class="game-link-container">
-        <p style="font-size: 1.1em; color: #555;">
-            Trò chơi không thể nhúng trực tiếp do vấn đề bảo mật của máy chủ.<br>
-            Vui lòng nhấp vào nút dưới đây để chơi game ở **cửa sổ mới**.
-        </p>
-        
-        <a 
-            href="http://103.153.74.65:81/?mpc=0" 
-            target="_blank" 
-            class="game-link-button"
-            title="Mở game trong tab mới"
+    <div id="game-container">
+        <iframe 
+            id="game-iframe"
+            /* Đây là link mặc định (dùng cho Desktop) */
+            src="http://103.153.74.65:81/?mpc=0" 
+            title="Game H5 nhúng"
+            allow="fullscreen"
+            tabindex="-1"
         >
-            BẤM ĐỂ CHƠI GAME
-        </a>
+            <p>Trình duyệt của bạn không hỗ trợ iframe. Vui lòng truy cập <a href="http://103.153.74.65:81/?mpc=0" target="_blank">trang game trực tiếp</a>.</p>
+        </iframe>
     </div>
 
 </body>
